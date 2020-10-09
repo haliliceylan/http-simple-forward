@@ -3,7 +3,15 @@
 # VERSION               1.0.1
 #
 FROM            nginx:alpine
-MAINTAINER      Eugene Cheah <eugene@picoded.com>
+
+ARG FORWARD_HOST=google.com
+ARG FORWARD_PORT=443
+ARG FORWARD_PROT="https"
+ARG PROXY_READ_TIMEOUT=600
+ARG MAX_BODY_SIZE=100M
+ARG MAX_BUFFER_SIZE=10M
+ARG DNS=""
+ARG DNS_VALID_TIMEOUT=10s
 
 # Makes only the entry point, no other points needed
 RUN mkdir /entrypoint;
@@ -15,31 +23,31 @@ EXPOSE 80
 # Server host to make request to, 
 # you may use a named container of "webhost" instead
 #
-ENV FORWARD_HOST halil.work
+ENV FORWARD_HOST $FORWARD_HOST
 
 # The destination server port
-ENV FORWARD_PORT 8080
+ENV FORWARD_PORT $FORWARD_PORT
 
 # The forwarding protocall
-ENV FORWARD_PROT "http"
+ENV FORWARD_PROT $FORWARD_PROT
 
 # Nginx proxy read timed, default is 600 seconds (10 minutes)
-ENV PROXY_READ_TIMEOUT 600
+ENV PROXY_READ_TIMEOUT $PROXY_READ_TIMEOUT
 
 # Client max body size conig (default disabled)
-ENV MAX_BODY_SIZE 100M
+ENV MAX_BODY_SIZE $MAX_BODY_SIZE
 
 # Client buffer size, before writing a tmp file
-ENV MAX_BUFFER_SIZE 10M
+ENV MAX_BUFFER_SIZE $MAX_BUFFER_SIZE
 
 # DNS server to use (if configured)
-ENV DNS ""
+ENV DNS $DNS
 
 # DNS Validity timeframe
 #
 # This can be set as blank to follow DNS declared settings
 # intentionally set to 10s to avoid DNS storms
-ENV DNS_VALID_TIMEOUT 10s
+ENV DNS_VALID_TIMEOUT $DNS_VALID_TIMEOUT
 
 #
 # Prepares the entrypoint primer script, and runs it once
